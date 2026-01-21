@@ -1,0 +1,100 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Test without injection feature (uses cblas-sys)
+  rust-default:
+    runs-on: ubuntu-latest
+    name: Rust (default, no injection)
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install OpenBLAS (LP64)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libopenblas-dev pkg-config
+
+      - name: Build (all targets, default features)
+        run: cargo build --all-targets --release
+
+      - name: Run tests (all targets, default features)
+        run: cargo test --all-targets --release
+
+  # Test with injection feature + LP64 OpenBLAS
+  rust-injection-lp64:
+    runs-on: ubuntu-latest
+    name: Rust (injection, LP64)
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install OpenBLAS (LP64)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libopenblas-dev pkg-config
+
+      - name: Build with injection feature
+        run: cargo build -p mdarray-linalg-blas --features injection --all-targets --release
+
+      - name: Run tests with injection feature
+        run: cargo test -p mdarray-linalg-blas --features injection --all-targets --release
+
+  # Test with injection feature + ILP64 OpenBLAS (64-bit integers)
+  rust-injection-ilp64:
+    runs-on: ubuntu-latest
+    name: Rust (injection, ILP64)
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install OpenBLAS ILP64 (64-bit integers)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libopenblas64-dev pkg-config
+
+      - name: Build with injection feature
+        run: cargo build -p mdarray-linalg-blas --features injection --all-targets --release
+
+      - name: Run tests with injection feature
+        run: cargo test -p mdarray-linalg-blas --features injection --all-targets --release
+
+  # Rollup job to simplify branch protection rules
+  rust-rollup:
+    runs-on: ubuntu-latest
+    needs:
+      - rust-default
+      - rust-injection-lp64
+      - rust-injection-ilp64
+    if: always()
+    steps:
+      - name: All Rust jobs passed
+        if: ${{ !contains(needs.*.result, 'failure') }}
+        run: exit 0
+
+      - name: Some Rust jobs failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
