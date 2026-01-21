@@ -1,3 +1,4 @@
+use approx::assert_relative_eq;
 use mdarray::{DTensor, tensor};
 use num_complex::Complex;
 
@@ -183,7 +184,13 @@ pub fn test_add_outer_her(bd: impl Outer<Complex<f64>, usize, usize>) {
         }
     });
 
-    assert_eq!(a, expected);
+    // Use approx comparison: beta=0.3 is not exactly representable in binary
+    for i in 0..n {
+        for j in 0..n {
+            assert_relative_eq!(a[[i, j]].re, expected[[i, j]].re, epsilon = 1e-15);
+            assert_relative_eq!(a[[i, j]].im, expected[[i, j]].im, epsilon = 1e-15);
+        }
+    }
 }
 
 pub fn test_add_to_scaled_vecvec(bd: impl VecOps<f64, usize>) {
