@@ -52,5 +52,12 @@ pub mod matmul;
 pub use matmul::{gemm, gemm_uninit};
 pub mod matvec;
 
+#[cfg(feature = "injection")]
+pub use matmul::{
+    AvailableFunctions, InjectedBackend, InjectedBlas, InjectedBlasScalar, RegistrationError,
+    SUPPORTED_FUNCTIONS, available_functions, get_backend, injected_gemm, injected_gemm_uninit,
+    is_backend_registered, register_backend,
+};
+
 #[derive(Default)]
 pub struct Blas;

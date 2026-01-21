@@ -10,6 +10,11 @@ categories = ["mathematics", "science"]
 authors = ["Pierre Wulles", "Christoph Groth"]
 build = "build.rs"
 
+[features]
+default = []
+# Enable runtime injection of BLAS function pointers (for Python/Julia integration)
+injection = []
+
 [dependencies]
 cblas-sys.workspace = true
 mdarray-linalg.workspace = true
