@@ -38,12 +38,11 @@ jobs:
       - name: Run tests (all targets, default features)
         run: cargo test --all-targets --release
 
-  # Test injection feature API surface (LP64 OpenBLAS for linking)
-  # Note: This tests the injection API surface only, not actual BLAS calls through injection.
-  # Real integration tests with injected function pointers are done in downstream crates.
+  # Test with injection feature enabled (LP64 OpenBLAS)
+  # Runs all mdarray-linalg-blas tests with injection feature
   rust-injection-lp64:
     runs-on: ubuntu-latest
-    name: Rust (injection API, LP64)
+    name: Rust (injection, LP64)
 
     steps:
       - uses: actions/checkout@v6
@@ -57,17 +56,16 @@ jobs:
           sudo apt-get install -y libopenblas-dev pkg-config
 
       - name: Build with injection feature
-        run: cargo build -p mdarray-linalg-blas --features injection --release
+        run: cargo build -p mdarray-linalg-blas --features injection --all-targets --release
 
-      - name: Run injection tests only
-        run: cargo test -p mdarray-linalg-blas --features injection --test injection --release
+      - name: Run all tests with injection feature
+        run: cargo test -p mdarray-linalg-blas --features injection --all-targets --release
 
-  # Test injection feature API surface with ILP64 OpenBLAS
-  # Note: libopenblas64-dev provides libopenblas64.so but cblas-sys links -lopenblas.
-  # We only run injection-specific tests which don't depend on actual BLAS linking.
+  # Test with injection feature enabled (ILP64 OpenBLAS)
+  # Note: libopenblas64-dev provides libopenblas64.so, create symlink for cblas-sys
   rust-injection-ilp64:
     runs-on: ubuntu-latest
-    name: Rust (injection API, ILP64)
+    name: Rust (injection, ILP64)
 
     steps:
       - uses: actions/checkout@v6
@@ -84,10 +82,10 @@ jobs:
           sudo ln -sf /usr/lib/x86_64-linux-gnu/libopenblas64.a /usr/lib/x86_64-linux-gnu/libopenblas.a
 
       - name: Build with injection feature
-        run: cargo build -p mdarray-linalg-blas --features injection --release
+        run: cargo build -p mdarray-linalg-blas --features injection --all-targets --release
 
-      - name: Run injection tests only
-        run: cargo test -p mdarray-linalg-blas --features injection --test injection --release
+      - name: Run all tests with injection feature
+        run: cargo test -p mdarray-linalg-blas --features injection --all-targets --release
 
   # Rollup job to simplify branch protection rules
   rust-rollup:
