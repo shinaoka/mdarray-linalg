@@ -1,3 +1,7 @@
+#[cfg(feature = "lapack-sys-backend")]
+use lapack_sys as lapack;
+#[cfg(feature = "lapack-inject-backend")]
+use lapack_inject as lapack;
 use num_complex::Complex;
 use paste::paste;
 
@@ -39,7 +43,7 @@ macro_rules! impl_lapack_real {
             ) {
                 unsafe {
                     paste! {
-                            lapack_sys::[<$prefix geqrf_>](
+                            lapack::[<$prefix geqrf_>](
                     &m as *const i32,
                     &n as *const i32,
                     a as *mut _,
@@ -63,7 +67,7 @@ macro_rules! impl_lapack_real {
             ) {
                 unsafe {
                     paste! {
-                                lapack_sys::[<$prefix $suffix gqr_>](
+                                lapack::[<$prefix $suffix gqr_>](
                                     &m as *const i32,
                     &m as *const i32,
                     &min_mn as *const i32,
@@ -83,10 +87,10 @@ macro_rules! impl_lapack_real {
 
 macro_rules! lapack_sys_cast {
     (c) => {
-        lapack_sys::lapack_complex_float
+        lapack::lapack_complex_float
     };
     (z) => {
-        lapack_sys::lapack_complex_double
+        lapack::lapack_complex_double
     };
 }
 
@@ -105,7 +109,7 @@ macro_rules! impl_lapack_cplx {
             ) {
                 unsafe {
                     paste! {
-                            lapack_sys::[<$prefix geqrf_>](
+                            lapack::[<$prefix geqrf_>](
                     &m as *const i32,
                     &n as *const i32,
                     a as *mut lapack_sys_cast!($prefix),
@@ -129,7 +133,7 @@ macro_rules! impl_lapack_cplx {
             ) {
                 unsafe {
                     paste! {
-                                lapack_sys::[<$prefix $suffix gqr_>](
+                                lapack::[<$prefix $suffix gqr_>](
                                     &m as *const i32,
                     &m as *const i32,
                     &min_mn as *const i32,

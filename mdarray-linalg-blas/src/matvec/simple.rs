@@ -1,6 +1,10 @@
 use std::any::TypeId;
 
-use cblas_sys::{CBLAS_LAYOUT, CBLAS_TRANSPOSE, CBLAS_UPLO};
+#[cfg(feature = "cblas-sys-backend")]
+use cblas_sys as cblas;
+#[cfg(feature = "cblas-inject-backend")]
+use cblas_inject as cblas;
+use cblas::{CBLAS_LAYOUT, CBLAS_TRANSPOSE, CBLAS_UPLO};
 use mdarray::{Dim, Layout, Shape, Slice};
 use mdarray_linalg::{into_i32, trans_stride};
 use num_complex::{Complex, ComplexFloat};

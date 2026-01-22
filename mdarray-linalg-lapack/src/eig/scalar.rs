@@ -1,5 +1,9 @@
 use std::ffi::c_void;
 
+#[cfg(feature = "lapack-sys-backend")]
+use lapack_sys as lapack;
+#[cfg(feature = "lapack-inject-backend")]
+use lapack_inject as lapack;
 use num_complex::Complex;
 use paste::paste;
 
@@ -82,7 +86,7 @@ macro_rules! impl_lapack_scalar_real {
             ) {
                 unsafe {
                     paste! {
-                        lapack_sys::[<$prefix geev_>](
+                        lapack::[<$prefix geev_>](
                             &jobvl as *const i8,
                             &jobvr as *const i8,
                             &n as *const i32,
@@ -117,7 +121,7 @@ macro_rules! impl_lapack_scalar_real {
             ) {
                 unsafe {
                     paste! {
-                        lapack_sys::[<$prefix syev_>](
+                        lapack::[<$prefix syev_>](
                             &jobz as *const i8,
                             &uplo as *const i8,
                             &n as *const i32,
@@ -154,7 +158,7 @@ macro_rules! impl_lapack_scalar_real {
                 type SelectFunc<T> = unsafe extern "C" fn(*const T, *const T) -> i32;
                 unsafe {
                     paste! {
-                                            lapack_sys::[<$prefix gees_>](
+                                            lapack::[<$prefix gees_>](
                                                 &jobvs as *const i8,
                                                 &sort as *const i8,
                     None::<SelectFunc<Self>>, // not used
@@ -180,10 +184,10 @@ macro_rules! impl_lapack_scalar_real {
 
 macro_rules! lapack_sys_cast {
     (c) => {
-        lapack_sys::lapack_complex_float
+        lapack::lapack_complex_float
     };
     (z) => {
-        lapack_sys::lapack_complex_double
+        lapack::lapack_complex_double
     };
 }
 
@@ -219,7 +223,7 @@ macro_rules! impl_lapack_scalar_cplx {
             ) {
                 unsafe {
                     paste! {
-                        lapack_sys::[<$prefix geev_>](
+                        lapack::[<$prefix geev_>](
                             &jobvl as *const i8,
                             &jobvr as *const i8,
                             &n as *const i32,
@@ -254,7 +258,7 @@ macro_rules! impl_lapack_scalar_cplx {
             ) {
                 unsafe {
                     paste! {
-                        lapack_sys::[<$prefix heev_>](
+                        lapack::[<$prefix heev_>](
                             &jobz as *const i8,
                             &uplo as *const i8,
                             &n as *const i32,
@@ -292,7 +296,7 @@ macro_rules! impl_lapack_scalar_cplx {
                 type SelectFunc<T> = unsafe extern "C" fn(*const T) -> i32;
                 unsafe {
                     paste! {
-                        lapack_sys::[<$prefix gees_>](
+                        lapack::[<$prefix gees_>](
                             &jobvs as *const i8,
                             &sort as *const i8,
                                     None::<SelectFunc<lapack_sys_cast!($prefix)>>, // not used

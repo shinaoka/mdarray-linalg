@@ -1,6 +1,10 @@
 use std::ops::{Add, Mul};
 
-use cblas_sys::CBLAS_UPLO;
+#[cfg(feature = "cblas-sys-backend")]
+use cblas_sys as cblas;
+#[cfg(feature = "cblas-inject-backend")]
+use cblas_inject as cblas;
+use cblas::CBLAS_UPLO;
 use mdarray::{Dim, Layout, Shape, Slice, Tensor};
 use mdarray_linalg::{
     matmul::{Triangle, Type},

@@ -1,6 +1,10 @@
 use std::mem::MaybeUninit;
 
-use cblas_sys::{CBLAS_SIDE, CBLAS_UPLO};
+#[cfg(feature = "cblas-sys-backend")]
+use cblas_sys as cblas;
+#[cfg(feature = "cblas-inject-backend")]
+use cblas_inject as cblas;
+use cblas::{CBLAS_SIDE, CBLAS_UPLO};
 use mdarray::{Dense, Dim, DynRank, Layout, Slice, Tensor};
 use mdarray_linalg::matmul::{
     Axes, ContractBuilder, MatMul, MatMulBuilder, Side, Triangle, Type, _contract,

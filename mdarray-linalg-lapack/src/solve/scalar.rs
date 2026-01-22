@@ -1,3 +1,7 @@
+#[cfg(feature = "lapack-sys-backend")]
+use lapack_sys as lapack;
+#[cfg(feature = "lapack-inject-backend")]
+use lapack_inject as lapack;
 use num_complex::Complex;
 use paste::paste;
 
@@ -31,7 +35,7 @@ macro_rules! impl_lapack_scalar {
             ) {
                 unsafe {
                     paste! {
-                        lapack_sys::[<$prefix getrf_>](
+                        lapack::[<$prefix getrf_>](
                             &m as *const i32,
                             &n as *const i32,
                             a as *mut _,
@@ -56,7 +60,7 @@ macro_rules! impl_lapack_scalar {
             ) {
                 unsafe {
                     paste! {
-                        lapack_sys::[<$prefix gesv_>](
+                        lapack::[<$prefix gesv_>](
                             &n as *const i32,
                             &nrhs as *const i32,
                             a as *mut _,

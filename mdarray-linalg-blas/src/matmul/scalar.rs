@@ -1,6 +1,10 @@
 // This file is auto-generated. Do not edit manually.
 //! Abstracting the BLAS scalar types
-use cblas_sys::{CBLAS_DIAG, CBLAS_LAYOUT, CBLAS_SIDE, CBLAS_TRANSPOSE, CBLAS_UPLO};
+#[cfg(feature = "cblas-sys-backend")]
+use cblas_sys as cblas;
+#[cfg(feature = "cblas-inject-backend")]
+use cblas_inject as cblas;
+use cblas::{CBLAS_DIAG, CBLAS_LAYOUT, CBLAS_SIDE, CBLAS_TRANSPOSE, CBLAS_UPLO};
 use num_complex::{Complex, ComplexFloat};
 
 #[allow(clippy::too_many_arguments, unused_variables)]
@@ -109,7 +113,7 @@ impl BlasScalar for f32 {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_sgemm(
+            cblas::cblas_sgemm(
                 layout,
                 transa,
                 transb,
@@ -144,7 +148,7 @@ impl BlasScalar for f32 {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_ssymm(
+            cblas::cblas_ssymm(
                 layout,
                 side,
                 uplo,
@@ -177,7 +181,7 @@ impl BlasScalar for f32 {
         ldb: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_strmm(
+            cblas::cblas_strmm(
                 layout,
                 side,
                 uplo,
@@ -213,7 +217,7 @@ impl BlasScalar for f64 {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_dgemm(
+            cblas::cblas_dgemm(
                 layout,
                 transa,
                 transb,
@@ -248,7 +252,7 @@ impl BlasScalar for f64 {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_dsymm(
+            cblas::cblas_dsymm(
                 layout,
                 side,
                 uplo,
@@ -281,7 +285,7 @@ impl BlasScalar for f64 {
         ldb: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_dtrmm(
+            cblas::cblas_dtrmm(
                 layout,
                 side,
                 uplo,
@@ -317,7 +321,7 @@ impl BlasScalar for Complex<f32> {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_cgemm(
+            cblas::cblas_cgemm(
                 layout,
                 transa,
                 transb,
@@ -352,7 +356,7 @@ impl BlasScalar for Complex<f32> {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_csymm(
+            cblas::cblas_csymm(
                 layout,
                 side,
                 uplo,
@@ -385,7 +389,7 @@ impl BlasScalar for Complex<f32> {
         ldb: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_ctrmm(
+            cblas::cblas_ctrmm(
                 layout,
                 side,
                 uplo,
@@ -418,7 +422,7 @@ impl BlasScalar for Complex<f32> {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_chemm(
+            cblas::cblas_chemm(
                 layout,
                 side,
                 uplo,
@@ -455,7 +459,7 @@ impl BlasScalar for Complex<f64> {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_zgemm(
+            cblas::cblas_zgemm(
                 layout,
                 transa,
                 transb,
@@ -490,7 +494,7 @@ impl BlasScalar for Complex<f64> {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_zsymm(
+            cblas::cblas_zsymm(
                 layout,
                 side,
                 uplo,
@@ -523,7 +527,7 @@ impl BlasScalar for Complex<f64> {
         ldb: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_ztrmm(
+            cblas::cblas_ztrmm(
                 layout,
                 side,
                 uplo,
@@ -556,7 +560,7 @@ impl BlasScalar for Complex<f64> {
         ldc: i32,
     ) {
         unsafe {
-            cblas_sys::cblas_zhemm(
+            cblas::cblas_zhemm(
                 layout,
                 side,
                 uplo,

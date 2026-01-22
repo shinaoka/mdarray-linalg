@@ -1,3 +1,7 @@
+#[cfg(feature = "lapack-sys-backend")]
+use lapack_sys as lapack;
+#[cfg(feature = "lapack-inject-backend")]
+use lapack_inject as lapack;
 use num_complex::Complex;
 use paste::paste;
 
@@ -63,7 +67,7 @@ macro_rules! impl_lapack_scalar_real {
             ) {
                 unsafe {
                     paste! {
-                        lapack_sys::[<$prefix gesdd_>](
+                        lapack::[<$prefix gesdd_>](
                             &jobz as *const i8,
                             &m as *const i32,
                             &n as *const i32,
@@ -103,7 +107,7 @@ macro_rules! impl_lapack_scalar_real {
             ) {
                 unsafe {
                     paste! {
-                            lapack_sys::[<$prefix gesvd_>](
+                            lapack::[<$prefix gesvd_>](
                                 &jobu as *const i8,
                     &jobvt as *const i8,
                                 &m as *const i32,
@@ -128,10 +132,10 @@ macro_rules! impl_lapack_scalar_real {
 
 macro_rules! lapack_sys_cast {
     (c) => {
-        lapack_sys::lapack_complex_float
+        lapack::lapack_complex_float
     };
     (z) => {
-        lapack_sys::lapack_complex_double
+        lapack::lapack_complex_double
     };
 }
 
@@ -167,7 +171,7 @@ macro_rules! impl_lapack_scalar_cplx {
             ) {
                 unsafe {
                     paste! {
-                    lapack_sys::[<$prefix gesdd_>](
+                    lapack::[<$prefix gesdd_>](
                         &jobz as *const i8,
                         &m as *const i32,
                         &n as *const i32,
@@ -209,7 +213,7 @@ macro_rules! impl_lapack_scalar_cplx {
             ) {
                 unsafe {
                     paste! {
-                                lapack_sys::[<$prefix gesvd_>](
+                                lapack::[<$prefix gesvd_>](
                                     &jobu as *const i8,
                     &jobvt as *const i8,
                                     &m as *const i32,
