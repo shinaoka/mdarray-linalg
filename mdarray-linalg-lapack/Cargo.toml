@@ -18,7 +18,7 @@ lapack-inject-backend = ["lapack-inject"]
 [dependencies]
 cblas-sys = { workspace = true, optional = true }
 lapack-sys = { workspace = true, optional = true }
-lapack-inject = { git = "https://github.com/shinaoka/lapack-inject", optional = true }
+lapack-inject = { workspace = true, optional = true }
 mdarray-linalg.workspace = true
 mdarray.workspace = true
 num-complex.workspace = true

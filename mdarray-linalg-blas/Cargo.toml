@@ -17,7 +17,7 @@ cblas-inject-backend = ["cblas-inject"]
 
 [dependencies]
 cblas-sys = { workspace = true, optional = true }
-cblas-inject = { git = "https://github.com/shinaoka/cblas-inject", optional = true }
+cblas-inject = { workspace = true, optional = true }
 mdarray-linalg.workspace = true
 mdarray.workspace = true
 num-complex.workspace = true
